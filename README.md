@@ -2,7 +2,7 @@
 
 A modern, responsive web-based calculator designed with a focus on user experience and utility. This project goes beyond basic arithmetic by providing a persistent history log and a fluid, tactile interface.
 
-## ✨ Features
+## Features
 
 * **Real-time History Panel:** Keeps track of your previous calculations so you never lose your data.
 * **Tactile Feedback:** Smooth CSS transitions and active scaling effects on every button press.
@@ -10,7 +10,7 @@ A modern, responsive web-based calculator designed with a focus on user experien
 * **Fully Responsive:** Designed with a grid layout that works perfectly on both desktop and mobile screens.
 * **Smart History Interaction:** Click any item in the history panel to instantly load that result back into the main display.
 
-## 🎨 Design Palette
+## Design Palette
 
 The interface uses a specialized "Slate & Azure" color scheme for high readability and reduced eye strain:
 * **Background:** `#0f172a` (Deep Slate)
@@ -18,7 +18,7 @@ The interface uses a specialized "Slate & Azure" color scheme for high readabili
 * **Accent (Equals):** `#38bdf8` (Azure Blue)
 * **Operators:** `#f59e0b` (Amber)
 
-## 🛠️ Built With
+## Built With
 
 * **HTML5:** Semantic structure for accessibility.
 * **CSS3:** Advanced CSS Grid and custom variables (`:root`) for easy skinning.
@@ -26,7 +26,7 @@ The interface uses a specialized "Slate & Azure" color scheme for high readabili
 
 
 
-## 🚀 Getting Started
+## Getting Started
 
 1.  **Clone the repository**
     ```bash
@@ -35,7 +35,7 @@ The interface uses a specialized "Slate & Azure" color scheme for high readabili
 2.  **Open the project**
     Simply double-click `Calculator.html` to run it in any modern web browser.
 
-## ⌨️ Keyboard Shortcuts
+## Keyboard Shortcuts
 
 | Key | Action |
 |-----|--------|
