@@ -1,121 +1,124 @@
-// 1. State Variables
-let currentInput = '0';
-let previousInput = '';
-let operation = null;
+let currentInput = "";
+let isDegree = true;
 
-// 2. DOM Elements
-const currentText = document.getElementById('current-operand');
-const previousText = document.getElementById('previous-operand');
-const historyList = document.getElementById('history-list');
+const currentOperandText = document.getElementById('current-operand');
+const previousOperandText = document.getElementById('previous-operand');
 
-// 3. Display Logic
 function updateDisplay() {
-    currentText.innerText = currentInput;
-    if (operation != null) {
-        previousText.innerText = `${previousInput} ${operation}`;
-    } else {
-        previousText.innerText = '';
-    }
+    currentOperandText.innerText = currentInput || "0";
 }
 
-// 4. Input Logic
-function appendNumber(number) {
-    if (number === '.' && currentInput.includes('.')) return;
-    if (currentInput === '0' && number !== '.') {
-        currentInput = number;
-    } else {
-        currentInput += number;
-    }
+function appendNumber(char) {
+    if (currentInput === "0" && char !== ".") currentInput = char;
+    else currentInput += char;
     updateDisplay();
 }
 
-function chooseOperation(op) {
-    if (currentInput === '') return;
-    if (previousInput !== '') compute();
-    operation = op;
-    previousInput = currentInput;
-    currentInput = '';
+function appendFunction(func) {
+    currentInput += func + "(";
+    updateDisplay();
+}
+
+function clearDisplay() {
+    currentInput = "";
+    previousOperandText.innerText = "";
     updateDisplay();
 }
 
 function deleteNumber() {
     currentInput = currentInput.toString().slice(0, -1);
-    if (currentInput === '') currentInput = '0';
     updateDisplay();
 }
 
-function clearDisplay() {
-    currentInput = '0';
-    previousInput = '';
-    operation = null;
-    updateDisplay();
-}
+// Inside compute()
+function compute() {
+    try {
+        // 1. Prepare the expression string
+        let expression = currentInput;
 
-// 5. History & Calculation Logic
-function addToHistory(equation, result) {
-    const emptyMsg = historyList.querySelector('.empty-msg');
+        // 2. Replace visual symbols with JS operators
+        expression = expression.replace(/×/g, '*').replace(/÷/g, '/');
+
+        // 3. Handle implicit multiplication like 5(6) or 2tan(45)
+        expression = expression.replace(/(\d)\(/g, '$1*(');
+        expression = expression.replace(/(\d)(sin|cos|tan|log|ln|√)/g, '$1*$2');
+
+        // 4. Translate math functions to JavaScript's Math object
+        // This handles things like tan(56) -> Math.tan(56 * Math.PI / 180)
+        expression = expression.replace(/(sin|cos|tan)\(([^)]+)\)/g, (match, func, angle) => {
+            // Assuming Degree mode. Use Math.PI / 180 to convert degrees to radians
+            return `Math.${func}((${angle}) * Math.PI / 180)`;
+        });
+
+        // 5. Handle other functions
+        expression = expression.replace(/√\(([^)]+)\)/g, 'Math.sqrt($1)');
+        expression = expression.replace(/log\(([^)]+)\)/g, 'Math.log10($1)');
+        expression = expression.replace(/ln\(([^)]+)\)/g, 'Math.log($1)');
+
+        // 6. Auto-close parentheses to prevent "Unexpected end of input" errors
+        const openBrackets = (expression.match(/\(/g) || []).length;
+        const closedBrackets = (expression.match(/\)/g) || []).length;
+        for (let i = 0; i < openBrackets - closedBrackets; i++) {
+            expression += ")";
+        }
+
+        // 7. Calculate and format
+        let result = eval(expression);
+        
+        // Round to 8 decimal places to avoid floating point glitches (like 0.000000000004)
+        if (!Number.isInteger(result)) {
+            result = parseFloat(result.toFixed(8));
+        }
+
+        addToHistory(currentInput, result);
+        currentInput = result.toString();
+        updateDisplay();
+        
+    } catch (e) {
+        console.error(e);
+        currentInput = "Error";
+        updateDisplay();
+    }
+}
+// Inside addToHistory()
+function addToHistory(eq, res) {
+    const list = document.getElementById('history-list');
+    
+    // Remove the "No calculations yet" message
+    const emptyMsg = list.querySelector('.empty-msg');
     if (emptyMsg) emptyMsg.remove();
 
     const li = document.createElement('li');
-    li.classList.add('history-item');
-    li.innerHTML = `
-        <div class="history-equation">${equation} =</div>
-        <div class="history-result">${result}</div>
-    `;
+    li.className = 'history-item';
     
-    li.onclick = () => {
-        currentInput = result;
-        updateDisplay();
-    };
-
-    historyList.prepend(li);
+    // We use a template that includes a small copy button
+    li.innerHTML = `
+        <div class="history-info">
+            <div class="history-equation">${eq}</div>
+            <div class="history-result">= ${res}</div>
+        </div>
+        <button class="copy-btn" onclick="copyToClipboard('${res}')">Copy</button>
+    `;
+    list.prepend(li);
 }
 
-function compute() {
-    let computation;
-    const prev = parseFloat(previousInput);
-    const current = parseFloat(currentInput);
-    if (isNaN(prev) || isNaN(current)) return;
-
-    switch (operation) {
-        case '+': computation = prev + current; break;
-        case '-': computation = prev - current; break;
-        case '×': computation = prev * current; break;
-        case '÷': 
-            if (current === 0) {
-                alert("Cannot divide by zero");
-                return;
-            }
-            computation = prev / current; 
-            break;
-        default: return;
-    }
-
-    const fullEquation = `${previousInput} ${operation} ${currentInput}`;
-    const result = computation.toString();
-
-    // Add to History
-    addToHistory(fullEquation, result);
-
-    currentInput = result;
-    operation = null;
-    previousInput = '';
-    updateDisplay();
+// Function to actually copy the text
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Optional: Change button text briefly to show it worked
+        alert("Copied: " + text);
+    });
 }
 
+// Ensure the clear history function puts the message back
 function clearHistory() {
-    historyList.innerHTML = '<li class="empty-msg">No calculations yet</li>';
+    document.getElementById('history-list').innerHTML = '<li class="empty-msg" style="color: rgba(255,255,255,0.3); font-size: 0.8rem; text-align: center; margin-top: 20px;">No calculations yet</li>';
 }
 
-// 6. Keyboard Support
-window.addEventListener('keydown', e => {
-    if (e.key >= 0 && e.key <= 9) appendNumber(e.key);
-    if (e.key === '.') appendNumber('.');
-    if (e.key === '=' || e.key === 'Enter') compute();
-    if (e.key === 'Backspace') deleteNumber();
-    if (e.key === 'Escape') clearDisplay();
-    if (e.key === '+') chooseOperation('+');
-    if (e.key === '-') chooseOperation('-');
-    if (e.key === '*') chooseOperation('×');
-    if (e.key === '/') chooseOperation('÷');
-});
+function toggleMode() {
+    document.getElementById('basic-keys').classList.toggle('hidden');
+    document.getElementById('advanced-keys').classList.toggle('hidden');
+    const btn = document.getElementById('mode-toggle');
+    btn.innerText = document.getElementById('basic-keys').classList.contains('hidden') ? '123' : '∛';
+}
+

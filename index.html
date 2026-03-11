@@ -7,46 +7,72 @@
     <link rel="stylesheet" href="Calculator.css">
 </head>
 <body>
-    <div class="app-container">
-        <div class="calculator">
-            <div class="display">
-                <div id="previous-operand" class="previous-operand"></div>
-                <div id="current-operand" class="current-operand">0</div>
-            </div>
-            <button class="span-two control" onclick="clearDisplay()">AC</button>
-            <button class="control" onclick="deleteNumber()">DEL</button>
-            <button class="operator" onclick="chooseOperation('÷')">÷</button>
-            
+  <div class="app-container">
+    <div class="calculator">
+        <div class="display">
+            <div id="previous-operand" class="previous-operand"></div>
+            <div id="current-operand" class="current-operand">0</div>
+        </div>
+        
+        <button class="control small-btn" onclick="clearDisplay()">AC</button>
+        <button id="mode-toggle" class="mode-btn" onclick="toggleMode()">∛</button> 
+        <button class="control small-btn" onclick="deleteNumber()">DEL</button>
+        <button class="operator" onclick="appendNumber('÷')">÷</button>
+
+        <div id="basic-keys" class="keypad-grid">
             <button onclick="appendNumber('7')">7</button>
             <button onclick="appendNumber('8')">8</button>
             <button onclick="appendNumber('9')">9</button>
-            <button class="operator" onclick="chooseOperation('×')">×</button>
+            <button class="operator" onclick="appendNumber('×')">×</button>
             
             <button onclick="appendNumber('4')">4</button>
             <button onclick="appendNumber('5')">5</button>
             <button onclick="appendNumber('6')">6</button>
-            <button class="operator" onclick="chooseOperation('+')">+</button>
+            <button class="operator" onclick="appendNumber('+')">+</button>
             
             <button onclick="appendNumber('1')">1</button>
             <button onclick="appendNumber('2')">2</button>
             <button onclick="appendNumber('3')">3</button>
-            <button class="operator" onclick="chooseOperation('-')">-</button>
+            <button class="operator" onclick="appendNumber('-')">-</button>
             
+            <button onclick="appendNumber('(')">(</button>
+            <button onclick="appendNumber(')')">)</button>
             <button onclick="appendNumber('.')">.</button>
-            <button onclick="appendNumber('0')">0</button>
-            <button class="span-two equals" onclick="compute()">=</button>
+            <button class="equals" onclick="compute()">=</button>
+
+            <button class="span-two" onclick="appendNumber('0')">0</button>
+            <button onclick="appendNumber(',')">,</button>
+            <button class="operator" onclick="appendNumber('%')">%</button>
         </div>
 
-        <div class="history-panel">
-            <div class="history-header">
-                <h3>History</h3>
-                <button class="clear-history" onclick="clearHistory()">Clear</button>
-            </div>
-            <ul id="history-list">
-                <li class="empty-msg">No calculations yet</li>
-            </ul>
+        <div id="advanced-keys" class="keypad-grid hidden">
+            <button class="adv" onclick="appendFunction('sin')">sin</button>
+            <button class="adv" onclick="appendFunction('cos')">cos</button>
+            <button class="adv" onclick="appendFunction('tan')">tan</button>
+            <button class="adv" onclick="appendFunction('log')">log</button>
+            
+            <button class="adv" onclick="appendFunction('ln')">ln</button>
+            <button class="adv" onclick="appendFunction('√')">√</button>
+            <button class="adv" onclick="appendNumber('**')">xʸ</button>
+            <button class="adv" onclick="scientific('fact')">x!</button>
+            
+            <button class="adv" onclick="appendNumber('Math.PI')">π</button>
+            <button class="adv" onclick="appendNumber('Math.E')">e</button>
+            <button class="adv" onclick="setDegree(true)">Deg</button>
+            <button class="adv" onclick="setDegree(false)">Rad</button>
         </div>
     </div>
+
+    <div class="history-panel">
+        <div class="history-header">
+            <h3>History</h3>
+            <button class="clear-history" onclick="clearHistory()">Clear</button>
+        </div>
+        <ul id="history-list">
+            <li class="empty-msg">No calculations yet</li>
+        </ul>
+    </div>
+</div>
 
     <script src="Calculator.js"></script>
 </body>
