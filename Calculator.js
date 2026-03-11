@@ -97,17 +97,8 @@ function addToHistory(eq, res) {
             <div class="history-equation">${eq}</div>
             <div class="history-result">= ${res}</div>
         </div>
-        <button class="copy-btn" onclick="copyToClipboard('${res}')">Copy</button>
     `;
     list.prepend(li);
-}
-
-// Function to actually copy the text
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        // Optional: Change button text briefly to show it worked
-        alert("Copied: " + text);
-    });
 }
 
 // Ensure the clear history function puts the message back
