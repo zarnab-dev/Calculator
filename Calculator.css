@@ -7,44 +7,6 @@
     --danger-color: #ef4444;
 }
 
-.history-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px;
-    border-bottom: 1px solid rgba(51, 65, 85, 0.5);
-    border-radius: 8px;
-    margin-bottom: 5px;
-}
-.history-result {
-    font-weight: bold;
-    font-size: 1rem;
-    color: var(--accent-color);
-    margin-top: 2px;
-    cursor: pointer; /* Makes it look clickable */
-    transition: color 0.2s;
-}
-
-.history-result:hover {
-    color: #ffffff; /* Glow effect on hover */
-    text-decoration: underline;
-}
-.copy-btn {
-    background: rgba(56, 189, 248, 0.1);
-    border: 1px solid var(--accent-color);
-    color: var(--accent-color);
-    padding: 2px 6px;
-    font-size: 0.6rem;
-    border-radius: 4px;
-    cursor: pointer;
-    width: auto; /* Ensures it doesn't stretch */
-    height: auto;
-}
-
-.copy-btn:hover {
-    background: var(--accent-color);
-    color: #0f172a;
-}
 body {
     background-color: var(--bg-color);
     display: flex;
